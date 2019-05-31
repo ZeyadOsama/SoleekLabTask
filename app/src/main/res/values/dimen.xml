@@ -1,0 +1,40 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="nav_header_vertical_spacing">8dp</dimen>
+    <dimen name="nav_header_height">176dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+
+    <!-- Default sizes. -->
+    <dimen name="margin_eighth">1dp</dimen>
+    <dimen name="margin_quarter">2dp</dimen>
+    <dimen name="margin_half">4dp</dimen>
+    <dimen name="margin_single">8dp</dimen>
+    <dimen name="margin_double">16dp</dimen>
+    <dimen name="margin_triple">24dp</dimen>
+    <dimen name="margin_quad">32dp</dimen>
+    <dimen name="margin_oct">64dp</dimen>
+
+    <dimen name="roundness_eighth">1dp</dimen>
+    <dimen name="roundness_quarter">2dp</dimen>
+    <dimen name="roundness_half">4dp</dimen>
+    <dimen name="roundness_single">8dp</dimen>
+    <dimen name="roundness_double">16dp</dimen>
+    <dimen name="roundness_triple">24dp</dimen>
+    <dimen name="roundness_quad">32dp</dimen>
+
+    <dimen name="text_quarter">2sp</dimen>
+    <dimen name="text_half">4sp</dimen>
+    <dimen name="text_single">8sp</dimen>
+    <dimen name="text_double">16sp</dimen>
+    <dimen name="text_triple">18sp</dimen>
+    <dimen name="text_quad">24sp</dimen>
+    <dimen name="text_oct">28sp</dimen>
+
+    <dimen name="image_size">128dp</dimen>
+
+    <dimen name="app_bar_height">180dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
+
+</resources>

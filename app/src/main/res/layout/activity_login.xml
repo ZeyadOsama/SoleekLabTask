@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/login_background"
+    android:padding="@dimen/margin_quad"
+    tools:context=".views.LoginActivity">
+
+    <ImageView
+        android:id="@+id/activity_login_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/margin_quad"
+        android:layout_marginBottom="@dimen/margin_quad"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/ic_app_logo" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/margin_oct"
+        android:orientation="vertical">
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/LoginTextInputEditTextStyle"
+            android:layout_marginBottom="@dimen/margin_triple">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/activity_login_et_email"
+                style="@style/LoginTextInputEditTextStyle"
+                android:hint="@string/hint_email" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/LoginTextInputEditTextStyle"
+            android:layout_marginBottom="@dimen/margin_triple">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/activity_login_et_password"
+                style="@style/LoginTextInputEditTextStyle"
+                android:hint="@string/hint_password" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/activity_login_btn_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_double"
+            android:background="@drawable/background_rounded_white"
+            android:backgroundTint="@android:color/white"
+            android:paddingStart="@dimen/margin_quad"
+            android:paddingEnd="@dimen/margin_quad"
+            android:text="@string/command_login"
+            android:textAllCaps="true"
+            android:textColor="@color/color_text"
+            android:textSize="@dimen/text_double" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/margin_quad">
+
+            <TextView
+                android:id="@+id/activity_login_tv_hint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/hint_do_not_have_an_account"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/text_triple" />
+
+            <TextView
+                android:id="@+id/activity_login_tv_register"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/activity_login_tv_hint"
+                android:paddingStart="@dimen/margin_single"
+                android:paddingEnd="0dp"
+                android:text="@string/command_register"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/text_triple"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

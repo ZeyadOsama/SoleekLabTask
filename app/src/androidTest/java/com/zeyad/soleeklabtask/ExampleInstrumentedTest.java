@@ -1,4 +1,4 @@
-package com.example.soleeklabtask;
+package com.zeyad.soleeklabtask;
 
 import android.content.Context;
 

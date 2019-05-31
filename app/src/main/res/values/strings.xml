@@ -1,3 +1,32 @@
 <resources>
     <string name="app_name">SoleekLabTask</string>
+
+    <!--Protocols-->
+    <string name="facebook_app_id">1144236659093204</string>
+    <string name="fb_login_protocol_scheme">fb1144236659093204</string>
+
+    <string name="google_web_client_id">169711554770-ule46iagqlcneh5m8moknsogdbas39se.apps.googleusercontent.com</string>
+
+    <!--Companies Names-->
+    <string name="name_facebook">Facebook</string>
+    <string name="name_google">Google</string>
+
+    <!--Hints-->
+    <string name="hint_password">Password</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_confirm_password">Confirm Password</string>
+    <string name="hint_do_not_have_an_account">Don\'t Have An Account?</string>
+    <string name="hint_have_an_account">Have An Account?</string>
+
+    <!--Commands-->
+    <string name="command_login">Log In</string>
+    <string name="command_register">Register</string>
+    <string name="command_create_account">Create Account</string>
+
+    <!--Warnings-->
+    <string name="warning_wrong_email_format">Enter a correct email address!</string>
+    <string name="warning_wrong_password_format">Password should be greater than 6 characters!</string>
+    <string name="warning_enter_correct_credentials">Please enter the correct credentials</string>
+    <string name="warning_password_does_not_match">Password does not match</string>
+
 </resources>
