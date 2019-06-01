@@ -8,7 +8,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.facebook.AccessToken;
@@ -22,18 +21,15 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.zeyad.soleeklabtask.R;
-import com.zeyad.soleeklabtask.utils.LogMessages;
 import com.zeyad.soleeklabtask.utils.Validation;
 
 import java.util.Arrays;
@@ -44,6 +40,13 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
 
+import static com.zeyad.soleeklabtask.utils.LogMessages.AUTHENTICATION;
+import static com.zeyad.soleeklabtask.utils.LogMessages.CANCELED;
+import static com.zeyad.soleeklabtask.utils.LogMessages.CREDENTIAL_SIGN_IN;
+import static com.zeyad.soleeklabtask.utils.LogMessages.FAILED;
+import static com.zeyad.soleeklabtask.utils.LogMessages.LOGIN;
+import static com.zeyad.soleeklabtask.utils.LogMessages.SUCCEEDED;
+
 public class RegistrationActivity extends AppCompatActivity {
 
     /**
@@ -52,7 +55,7 @@ public class RegistrationActivity extends AppCompatActivity {
     public static final String TAG = RegistrationActivity.class.getSimpleName();
 
     /**
-     * Static binding
+     * View binding
      */
     @BindView(R.id.activity_registration_et_email)
     TextInputEditText etEmail;
@@ -88,7 +91,9 @@ public class RegistrationActivity extends AppCompatActivity {
         Window window = getWindow();
         window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 
-        init();
+        authentication = FirebaseAuth.getInstance();
+        initGoogleAuthentication();
+        initFacebookAuthentication();
     }
 
     @Override
@@ -99,10 +104,20 @@ public class RegistrationActivity extends AppCompatActivity {
             startActivity(new Intent(RegistrationActivity.this, MainActivity.class));
     }
 
-    private void init() {
-        authentication = FirebaseAuth.getInstance();
-        initGoogleAuthentication();
-        initFacebookAuthentication();
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == RC_SIGN_IN) {
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            try {
+                GoogleSignInAccount account = task.getResult(ApiException.class);
+                authenticate(account);
+            } catch (ApiException e) {
+                Log.w(TAG, FAILED + e.getStatusCode());
+            }
+        }
     }
 
     @OnTextChanged(R.id.activity_registration_et_email)
@@ -132,20 +147,16 @@ public class RegistrationActivity extends AppCompatActivity {
 
     @OnClick(R.id.activity_registration_btn_create)
     public void createAccount() {
-
         if (isEmailValid && isPasswordValid && isPasswordMatch) {
             authentication.createUserWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                Log.d(TAG, "createUserWithEmail:success");
-                                startActivity(new Intent(RegistrationActivity.this, MainActivity.class));
-                            } else {
-                                Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                                Snackbar.make(findViewById(R.id.activity_registration_btn_create), "Authentication failed.",
-                                        Snackbar.LENGTH_LONG).show();
-                            }
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "createUserWithEmail:success");
+                            startActivity(new Intent(RegistrationActivity.this, MainActivity.class));
+                        } else {
+                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                            Snackbar.make(findViewById(R.id.activity_registration_btn_create), "Authentication failed.",
+                                    Snackbar.LENGTH_LONG).show();
                         }
                     });
         } else
@@ -159,41 +170,19 @@ public class RegistrationActivity extends AppCompatActivity {
         startActivityForResult(mGoogleSignInClient.getSignInIntent(), RC_SIGN_IN);
     }
 
-    @OnClick(R.id.activity_registration_tv_login)
-    public void goToLoginScreen() {
-        startActivity(new Intent(this, LoginActivity.class));
-    }
-
     private void authenticate(GoogleSignInAccount acct) {
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         authentication.signInWithCredential(credential)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
-                        Log.d(TAG, "signInWithCredential:success");
+                        Log.d(TAG, CREDENTIAL_SIGN_IN + SUCCEEDED);
                         RegistrationActivity.this.startActivity(new Intent(RegistrationActivity.this, MainActivity.class));
                     } else {
-                        Log.w(TAG, "signInWithCredential:failure", task.getException());
+                        Log.w(TAG, CREDENTIAL_SIGN_IN + FAILED, task.getException());
                         Snackbar.make(findViewById(R.id.activity_registration_btn_sign_in_google),
-                                "Authentication Failed.",
-                                Snackbar.LENGTH_SHORT).show();
+                                AUTHENTICATION + FAILED, Snackbar.LENGTH_SHORT).show();
                     }
                 });
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        callbackManager.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == RC_SIGN_IN) {
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            try {
-                GoogleSignInAccount account = task.getResult(ApiException.class);
-                authenticate(account);
-            } catch (ApiException e) {
-                Log.w(TAG, LogMessages.FAILED + e.getStatusCode());
-            }
-        }
     }
 
     private void initGoogleAuthentication() {
@@ -201,7 +190,6 @@ public class RegistrationActivity extends AppCompatActivity {
                 .requestIdToken(getString(R.string.google_web_client_id))
                 .requestEmail()
                 .build();
-
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
     }
 
@@ -214,35 +202,43 @@ public class RegistrationActivity extends AppCompatActivity {
                 new FacebookCallback<LoginResult>() {
                     @Override
                     public void onSuccess(LoginResult loginResult) {
-                        handleFacebookAccessToken(loginResult.getAccessToken());
+                        accessTokenHandler(loginResult.getAccessToken());
                     }
 
                     @Override
                     public void onCancel() {
-//                        Toast.makeText(MainActivity.this, "Login Cancel", Toast.LENGTH_LONG).show();
+                        Snackbar.make(findViewById(R.id.activity_registration_btn_sign_in_facebook),
+                                LOGIN + CANCELED, Snackbar.LENGTH_LONG).show();
                     }
 
                     @Override
                     public void onError(FacebookException exception) {
-//                        Toast.makeText(MainActivity.this, exception.getMessage(), Toast.LENGTH_LONG).show();
+                        Snackbar.make(findViewById(R.id.activity_registration_btn_sign_in_facebook),
+                                exception.getMessage(), Snackbar.LENGTH_LONG).show();
                     }
                 });
     }
 
-
-    private void handleFacebookAccessToken(AccessToken token) {
+    private void accessTokenHandler(AccessToken token) {
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
         authentication.signInWithCredential(credential)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
-                        Log.d(TAG, "signInWithCredential:success");
+                        Log.d(TAG, CREDENTIAL_SIGN_IN + SUCCEEDED);
                         RegistrationActivity.this.startActivity(new Intent(RegistrationActivity.this, MainActivity.class));
                     } else {
-                        Log.w(TAG, "signInWithCredential:failure", task.getException());
+                        Log.w(TAG, CREDENTIAL_SIGN_IN + FAILED, task.getException());
                         Snackbar.make(findViewById(R.id.activity_registration_btn_sign_in_facebook),
-                                "Authentication failed.",
-                                Snackbar.LENGTH_LONG).show();
+                                AUTHENTICATION + FAILED, Snackbar.LENGTH_LONG).show();
                     }
                 });
+    }
+
+    /**
+     * starts {@link LoginActivity}
+     */
+    @OnClick(R.id.activity_registration_tv_login)
+    public void startLoginActivity() {
+        startActivity(new Intent(this, LoginActivity.class));
     }
 }

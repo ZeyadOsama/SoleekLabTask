@@ -8,7 +8,6 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.zeyad.soleeklabtask.R;
 import com.zeyad.soleeklabtask.model.Country;
-import com.zeyad.soleeklabtask.utils.LogMessages;
 
 import java.util.ArrayList;
 
@@ -18,6 +17,10 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
+
+import static com.zeyad.soleeklabtask.utils.LogMessages.FAILED;
+import static com.zeyad.soleeklabtask.utils.LogMessages.LOADING;
+import static com.zeyad.soleeklabtask.utils.LogMessages.SUCCEEDED;
 
 public class CountryDataManager {
 
@@ -48,20 +51,20 @@ public class CountryDataManager {
         call.enqueue(new Callback<ArrayList<Country>>() {
             @Override
             public void onResponse(@NonNull Call<ArrayList<Country>> call, @NonNull Response<ArrayList<Country>> response) {
-                Log.d(TAG, LogMessages.SUCCEEDED);
+                Log.d(TAG, LOADING + SUCCEEDED);
                 countriesList.setValue(response.body());
             }
 
             @Override
             public void onFailure(@NonNull Call<ArrayList<Country>> call, @NonNull Throwable throwable) {
-                Log.e(TAG, LogMessages.FAILED + throwable.toString());
+                Log.e(TAG, LOADING + FAILED + throwable.toString());
             }
         });
         return countriesList;
     }
 
     /**
-     * API Interface
+     * Countries API Interface
      */
     private interface CountriesAPI {
 
