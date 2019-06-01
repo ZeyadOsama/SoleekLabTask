@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorPrimary">#6D845F</color>
+    <color name="colorPrimaryDark">#486142</color>
+    <color name="colorAccent">#AD895E</color>
+
+
+    <color name="color_background">#EEEEEE</color>
 
     <color name="color_text">#546E7A</color>
     <color name="color_text_secondary_sub">#819CA9</color>
+
+    <color name="color_red">#FF6B6B</color>
 
     <color name="facebook_color">#4A66AD</color>
 

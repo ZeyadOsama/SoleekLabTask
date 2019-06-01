@@ -14,61 +14,53 @@ import android.view.MenuItem;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.zeyad.soleeklabtask.R;
+import com.zeyad.soleeklabtask.model.Country;
+import com.zeyad.soleeklabtask.viewmodels.CountryViewModel;
+import com.zeyad.soleeklabtask.views.adapters.CountryRecyclerAdapter;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 public class MainActivity extends AppCompatActivity {
 
-    private RecyclerView rvCountries;
-//    private CountriesViewModel countriesViewModel;
-    private FirebaseAuth mAuth;
+    @BindView(R.id.activity_main_rv_countries)
+    RecyclerView rvCountries;
+
+    private FirebaseAuth authentication;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
-//        init();
+        initViewModel();
     }
 
-//    private void init() {
-//        rvCountries = findViewById(R.id.rv_countries);
-//        rvCountries.setLayoutManager(new LinearLayoutManager(this));
-//        rvCountries.setHasFixedSize(true);
-//
-//        countriesViewModel = ViewModelProviders.of(this).get(CountriesViewModel.class);
-//        countriesViewModel.getCountries().observe(this, new Observer<ArrayList<Country>>() {
-//            @Override
-//            public void onChanged(ArrayList<Country> countries) {
-//                rvCountries.setAdapter(new CountriesRecyclerAdapter(countries, HomeActivity.this));
-//
-//            }
-//        });
-//    }
+    private void initViewModel() {
+        rvCountries.setLayoutManager(new LinearLayoutManager(this));
+        rvCountries.setHasFixedSize(true);
+
+        CountryViewModel countryViewModel = ViewModelProviders.of(this).get(CountryViewModel.class);
+        countryViewModel.get().observe(this,
+                countries -> rvCountries.setAdapter(new CountryRecyclerAdapter(countries, MainActivity.this)));
+    }
 
     @Override
     protected void onStart() {
         super.onStart();
-
-        mAuth = FirebaseAuth.getInstance();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+        authentication = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = authentication.getCurrentUser();
         if (currentUser == null)
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.main_menu, menu);
-//        return true;
-//    }
-
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        if (item.getItemId() == R.id.action_logout) {
-//            mAuth.signOut();
-//            startActivity(new Intent(this, LoginActivity.class));
-//            return true;
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
+    @OnClick(R.id.activity_main_btn_sign_out)
+    public void signOut() {
+        authentication.signOut();
+        startActivity(new Intent(MainActivity.this, LoginActivity.class));
+    }
 }

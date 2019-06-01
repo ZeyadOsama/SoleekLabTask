@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">SoleekLabTask</string>
 
+    <!--API-->
+    <string name="api_countries">"https://restcountries.eu/rest/v2/"</string>
+
     <!--Protocols-->
     <string name="facebook_app_id">1144236659093204</string>
     <string name="fb_login_protocol_scheme">fb1144236659093204</string>
@@ -10,6 +13,10 @@
     <!--Companies Names-->
     <string name="name_facebook">Facebook</string>
     <string name="name_google">Google</string>
+
+    <!--Login with companies names-->
+    <string name="login_facebook">Continue with Facebook</string>
+    <string name="login_google">Continue with Google</string>
 
     <!--Hints-->
     <string name="hint_password">Password</string>
@@ -28,5 +35,6 @@
     <string name="warning_wrong_password_format">Password should be greater than 6 characters!</string>
     <string name="warning_enter_correct_credentials">Please enter the correct credentials</string>
     <string name="warning_password_does_not_match">Password does not match</string>
+    <string name="command_sign_out">Sign Out</string>
 
 </resources>

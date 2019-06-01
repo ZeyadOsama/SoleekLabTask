@@ -24,6 +24,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -32,6 +33,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.zeyad.soleeklabtask.R;
+import com.zeyad.soleeklabtask.utils.LogMessages;
 import com.zeyad.soleeklabtask.utils.Validation;
 
 import java.util.Arrays;
@@ -130,22 +132,25 @@ public class RegistrationActivity extends AppCompatActivity {
 
     @OnClick(R.id.activity_registration_btn_create)
     public void createAccount() {
+
         if (isEmailValid && isPasswordValid && isPasswordMatch) {
             authentication.createUserWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "createUserWithEmail:success");
-                            startActivity(new Intent(RegistrationActivity.this, MainActivity.class));
-                        } else {
-//                                Log.w(TAG, "createUserWithEmail:failure", task.getException());
-//                                Snackbar.make(findViewById(R.id.btn_create_account_registeration_activity), "Authentication failed.",
-//                                        Snackbar.LENGTH_LONG).show();
+                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                Log.d(TAG, "createUserWithEmail:success");
+                                startActivity(new Intent(RegistrationActivity.this, MainActivity.class));
+                            } else {
+                                Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                                Snackbar.make(findViewById(R.id.activity_registration_btn_create), "Authentication failed.",
+                                        Snackbar.LENGTH_LONG).show();
+                            }
                         }
                     });
-        } else {
-//            Snackbar.make(findViewById(R.id.btn_create_account_registeration_activity), "Please enter correct values!",
-//                    Snackbar.LENGTH_SHORT).show();
-        }
+        } else
+            Snackbar.make(findViewById(R.id.activity_registration_btn_create), "Please enter correct values!",
+                    Snackbar.LENGTH_SHORT).show();
 
     }
 
@@ -159,21 +164,18 @@ public class RegistrationActivity extends AppCompatActivity {
         startActivity(new Intent(this, LoginActivity.class));
     }
 
-    private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
-        Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
-
+    private void authenticate(GoogleSignInAccount acct) {
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         authentication.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "signInWithCredential:success");
-                            RegistrationActivity.this.startActivity(new Intent(RegistrationActivity.this, MainActivity.class));
-                        } else {
-//                        Log.w(TAG, "signInWithCredential:failure", task.getException());
-//                        Snackbar.make(findViewById(R.id.btn_google_registeration_activity), "Authentication Failed.", Snackbar.LENGTH_SHORT).show();
-                        }
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        Log.d(TAG, "signInWithCredential:success");
+                        RegistrationActivity.this.startActivity(new Intent(RegistrationActivity.this, MainActivity.class));
+                    } else {
+                        Log.w(TAG, "signInWithCredential:failure", task.getException());
+                        Snackbar.make(findViewById(R.id.activity_registration_btn_sign_in_google),
+                                "Authentication Failed.",
+                                Snackbar.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -187,9 +189,9 @@ public class RegistrationActivity extends AppCompatActivity {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
-                firebaseAuthWithGoogle(account);
+                authenticate(account);
             } catch (ApiException e) {
-                Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
+                Log.w(TAG, LogMessages.FAILED + e.getStatusCode());
             }
         }
     }
@@ -236,9 +238,10 @@ public class RegistrationActivity extends AppCompatActivity {
                         Log.d(TAG, "signInWithCredential:success");
                         RegistrationActivity.this.startActivity(new Intent(RegistrationActivity.this, MainActivity.class));
                     } else {
-//                        Log.w(TAG, "signInWithCredential:failure", task.getException());
-//                        Snackbar.make(findViewById(R.id.btn_facebook_registeration_activity), "Authentication failed.",
-//                                Snackbar.LENGTH_LONG).show();
+                        Log.w(TAG, "signInWithCredential:failure", task.getException());
+                        Snackbar.make(findViewById(R.id.activity_registration_btn_sign_in_facebook),
+                                "Authentication failed.",
+                                Snackbar.LENGTH_LONG).show();
                     }
                 });
     }
