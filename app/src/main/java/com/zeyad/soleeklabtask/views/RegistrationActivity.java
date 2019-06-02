@@ -106,8 +106,8 @@ public class RegistrationActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
@@ -115,7 +115,7 @@ public class RegistrationActivity extends AppCompatActivity {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 authenticate(account);
             } catch (ApiException e) {
-                Log.w(TAG, FAILED + e.getStatusCode());
+                Log.w(TAG, e.getCause());
             }
         }
     }
@@ -170,13 +170,14 @@ public class RegistrationActivity extends AppCompatActivity {
         startActivityForResult(mGoogleSignInClient.getSignInIntent(), RC_SIGN_IN);
     }
 
-    private void authenticate(GoogleSignInAccount acct) {
-        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+    private void authenticate(GoogleSignInAccount account) {
+        Log.d(TAG, "firebaseAuthWithGoogle:" + account.getId());
+        AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
         authentication.signInWithCredential(credential)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         Log.d(TAG, CREDENTIAL_SIGN_IN + SUCCEEDED);
-                        RegistrationActivity.this.startActivity(new Intent(RegistrationActivity.this, MainActivity.class));
+                        startActivity(new Intent(RegistrationActivity.this, MainActivity.class));
                     } else {
                         Log.w(TAG, CREDENTIAL_SIGN_IN + FAILED, task.getException());
                         Snackbar.make(findViewById(R.id.activity_registration_btn_sign_in_google),

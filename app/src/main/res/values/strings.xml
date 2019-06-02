@@ -24,6 +24,7 @@
     <string name="hint_confirm_password">Confirm Password</string>
     <string name="hint_do_not_have_an_account">Don\'t Have An Account?</string>
     <string name="hint_have_an_account">Have An Account?</string>
+    <string name="hint_comma">,</string>
 
     <!--Commands-->
     <string name="command_login">Log In</string>

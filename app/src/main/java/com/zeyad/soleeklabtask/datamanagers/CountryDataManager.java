@@ -1,12 +1,10 @@
 package com.zeyad.soleeklabtask.datamanagers;
 
-import android.content.res.Resources;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
-import com.zeyad.soleeklabtask.R;
 import com.zeyad.soleeklabtask.model.Country;
 
 import java.util.ArrayList;
@@ -47,7 +45,8 @@ public class CountryDataManager {
                 .build();
 
         CountriesAPI countriesAPI = retrofit.create(CountriesAPI.class);
-        Call<ArrayList<Country>> call = countriesAPI.getCountriesNames();
+
+        Call<ArrayList<Country>> call = countriesAPI.load();
         call.enqueue(new Callback<ArrayList<Country>>() {
             @Override
             public void onResponse(@NonNull Call<ArrayList<Country>> call, @NonNull Response<ArrayList<Country>> response) {
@@ -68,7 +67,22 @@ public class CountryDataManager {
      */
     private interface CountriesAPI {
 
+        /**
+         * @return all data of countries
+         */
+        @GET("all")
+        Call<ArrayList<Country>> load();
+
+        /**
+         * @return all names of countries
+         */
         @GET("all?fields=name")
-        Call<ArrayList<Country>> getCountriesNames();
+        Call<ArrayList<Country>> loadNames();
+
+        /**
+         * @return all flags of countries
+         */
+        @GET("all?fields=flag")
+        Call<ArrayList<Country>> loadFlags();
     }
 }

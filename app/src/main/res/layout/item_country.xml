@@ -1,11 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/item_country_tv_name"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item_country"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/margin_double"
     android:layout_marginTop="@dimen/margin_double"
     android:layout_marginEnd="@dimen/margin_double"
-    android:gravity="center"
-    android:textColor="@color/color_text"
-    android:textSize="@dimen/text_triple" />
+    android:gravity="center">
+
+    <ImageView
+        android:id="@+id/item_country_iv_flag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:scaleType="centerCrop" />
+
+    <TextView
+        android:id="@+id/item_country_tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@id/item_country_iv_flag"
+        android:paddingStart="@dimen/margin_single"
+        android:paddingEnd="0dp"
+        android:textColor="@color/color_text"
+        android:textSize="@dimen/text_double" />
+
+    <TextView
+        android:id="@+id/item_country_tv_comma"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@id/item_country_tv_name"
+        android:paddingStart="0dp"
+        android:paddingEnd="@dimen/margin_single"
+        android:text="@string/hint_comma"
+        android:textColor="@color/color_text"
+        android:textSize="@dimen/text_double" />
+
+    <TextView
+        android:id="@+id/item_country_tv_alpha_code"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@id/item_country_tv_name"
+        android:paddingStart="@dimen/margin_single"
+        android:paddingEnd="0dp"
+        android:textColor="@color/color_text"
+        android:textSize="@dimen/text_double"
+        android:textStyle="italic" />
+
+</RelativeLayout>
